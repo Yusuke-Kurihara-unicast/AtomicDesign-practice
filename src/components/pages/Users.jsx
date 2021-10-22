@@ -1,6 +1,13 @@
+// import React, { useContext } from "react";
+import React from "react";
+import styled from "styled-components";
+// import { UserContext } from "../../providers/UserProvider";
+import { SecondaryButton } from "../atoms/button/SecondaryButton";
 import { SearchInput } from "../molecule/SearchInput";
 import { UserCard } from "../organisms/user/UserCard";
-import styled from "styled-components";
+
+import { useRecoilState } from "recoil";
+import { userState } from "../../store/userState";
 
 const user = {
   id: 0,
@@ -23,10 +30,27 @@ const users = [...Array(10).keys()].map((val) => {
 });
 
 export const Users = () => {
+  // const { userInfo, setUserInfo } = useContext(UserContext);
+  const [userInfo, setUserInfo] = useRecoilState(userState);
+
+  const onClickSwitch = () => {
+    if (!!userInfo) {
+      setUserInfo({
+        isAdmin: "isAdmin" in userInfo ? !userInfo.isAdmin : false
+      });
+    } else {
+      setUserInfo({
+        isAdmin: true
+      });
+    }
+  };
+
   return (
     <SContainer>
       <h2>User一覧ページ</h2>
       <SearchInput />
+      <br />
+      <SecondaryButton onClick={onClickSwitch}>切り替え</SecondaryButton>
       <SUserArea>
         {users.map((user) => (
           <UserCard key={user.id} user={user} />
